@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Day 2 - Part 1</title>
+    <title>Day 2 - Part 2</title>
 </head>
 <body>
 <div id="input">20x3x11
@@ -1007,13 +1007,13 @@
 <script>
     var input = document.getElementById("input").textContent;
     var dimensions = input.split("\n");
-    var paper = 0;
+    var ribbon = 0;
     for(var i = 0; i < dimensions.length; i++) {
         var sorted = dimensions[i].split("x").sort(function(a, b){return parseInt(a)-parseInt(b)});
         
-        paper += 2*sorted[0]*sorted[1] + 2*sorted[1]*sorted[2] + 2*sorted[0]*sorted[2] + sorted[0]*sorted[1];
+        ribbon += 2*sorted[0] + 2*sorted[1] + sorted[0]*sorted[1]*sorted[2];
     }
-    document.getElementById("output").textContent = paper;
+    document.getElementById("output").textContent = ribbon;
 </script>
 </body>
 </html>
