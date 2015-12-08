@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>Day 4 - Part 2</title>
+</head>
+<body>
+<script src="../../lib/md5.js"></script>
+<div id="output"></div>
+<br><br>
+<script>
+    var input = "ckczppom";
+    var i = 1;
+    while (md5(input + i).substr(0,6) !== "000000") {
+        i++;
+    }
+    
+    document.getElementById("output").textContent = i;
+</script>
+</body>
+</html>
