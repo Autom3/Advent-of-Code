@@ -1,0 +1,82 @@
+<html>
+<head>
+	<title>Day 14 - Part 1</title>
+</head>
+<body>
+<div id="input">Dancer can fly 27 km/s for 5 seconds, but then must rest for 132 seconds.
+Cupid can fly 22 km/s for 2 seconds, but then must rest for 41 seconds.
+Rudolph can fly 11 km/s for 5 seconds, but then must rest for 48 seconds.
+Donner can fly 28 km/s for 5 seconds, but then must rest for 134 seconds.
+Dasher can fly 4 km/s for 16 seconds, but then must rest for 55 seconds.
+Blitzen can fly 14 km/s for 3 seconds, but then must rest for 38 seconds.
+Prancer can fly 3 km/s for 21 seconds, but then must rest for 40 seconds.
+Comet can fly 18 km/s for 6 seconds, but then must rest for 103 seconds.
+Vixen can fly 18 km/s for 5 seconds, but then must rest for 84 seconds.</div>
+<script src="../../lib/underscore-min.js"></script>
+<script src="../../lib/events.js"></script>
+<script src="../../lib/two.min.js"></script>
+<div id="output"></div>
+<br>
+<button onclick="two.play()">Play</button>
+<button onclick="two.pause()">Pause</button>
+<br>
+<script>
+var input = unescape(document.getElementById("input").textContent);
+var inputLines = input.split("\n");
+
+var two = new Two({width: 750, height: 300}).appendTo(document.body);
+
+var reindeers = {};
+for(var i = 0; i < inputLines.length; i++) {
+    var reindeer = {};
+    var s = inputLines[i];
+    reindeer.speed = parseInt(s.substr(s.indexOf("fly")+4,s.indexOf(" km/s")-s.indexOf("fly")-4));
+    reindeer.fly = parseInt(s.substr(s.indexOf("for")+4,s.indexOf(" seconds")-s.indexOf("for")-4));
+    reindeer.time = reindeer.fly;
+    reindeer.rest = parseInt(s.substr(s.lastIndexOf("for")+4,s.lastIndexOf(" seconds")-s.lastIndexOf("for")-4));
+    reindeer.flying = true;
+    reindeer.distance = 0;
+    reindeer.two = two.makeCircle(10,30*(i+1),10);
+    reindeers[s.substr(0,s.indexOf(" can"))] = reindeer;
+}
+
+var count = 0;
+two.bind("update", function(frameCount) {
+    if (count >= 2503) {
+        var max = 0;
+        var name = undefined;
+        for(reindeer in reindeers) {
+            if (reindeers[reindeer].distance > max) {
+                max = reindeers[reindeer].distance;
+                name = reindeer;
+            }
+        }
+
+        document.getElementById("output").textContent = name + ": " + max;
+        two.pause();
+        return;
+    }
+    
+    for(var i = 0; i < 5; i++) {
+        for(reindeer in reindeers) {
+            if (reindeers[reindeer].flying) {
+                reindeers[reindeer].distance += reindeers[reindeer].speed;
+                reindeers[reindeer].two.translation.x += reindeers[reindeer].speed/10;
+                reindeers[reindeer].time--;
+                if (reindeers[reindeer].time == 0) {
+                    reindeers[reindeer].flying = false;
+                }
+            } else {
+                reindeers[reindeer].time++;
+                if (reindeers[reindeer].time == reindeers[reindeer].rest) {
+                    reindeers[reindeer].flying = true;
+                    reindeers[reindeer].time = reindeers[reindeer].fly;
+                }
+            }
+        }
+        count++;
+    }
+});
+</script>
+</body>
+</html>

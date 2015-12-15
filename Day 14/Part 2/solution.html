@@ -1,0 +1,74 @@
+<html>
+<head>
+	<title>Day 14 - Part 2</title>
+</head>
+<body>
+<div id="input">Dancer can fly 27 km/s for 5 seconds, but then must rest for 132 seconds.
+Cupid can fly 22 km/s for 2 seconds, but then must rest for 41 seconds.
+Rudolph can fly 11 km/s for 5 seconds, but then must rest for 48 seconds.
+Donner can fly 28 km/s for 5 seconds, but then must rest for 134 seconds.
+Dasher can fly 4 km/s for 16 seconds, but then must rest for 55 seconds.
+Blitzen can fly 14 km/s for 3 seconds, but then must rest for 38 seconds.
+Prancer can fly 3 km/s for 21 seconds, but then must rest for 40 seconds.
+Comet can fly 18 km/s for 6 seconds, but then must rest for 103 seconds.
+Vixen can fly 18 km/s for 5 seconds, but then must rest for 84 seconds.</div>
+<div id="output"></div>
+<script>
+var input = unescape(document.getElementById("input").textContent);
+var inputLines = input.split("\n");
+
+var reindeers = {};
+for(var i = 0; i < inputLines.length; i++) {
+    var reindeer = {};
+    var s = inputLines[i];
+    reindeer.speed = parseInt(s.substr(s.indexOf("fly")+4,s.indexOf(" km/s")-s.indexOf("fly")-4));
+    reindeer.fly = parseInt(s.substr(s.indexOf("for")+4,s.indexOf(" seconds")-s.indexOf("for")-4));
+    reindeer.time = reindeer.fly;
+    reindeer.rest = parseInt(s.substr(s.lastIndexOf("for")+4,s.lastIndexOf(" seconds")-s.lastIndexOf("for")-4));
+    reindeer.flying = true;
+    reindeer.distance = 0;
+    reindeer.points = 0;
+    reindeers[s.substr(0,s.indexOf(" can"))] = reindeer;
+}
+    
+for(var i = 0; i < 2503; i++) {
+    var max = 0;
+    for(reindeer in reindeers) {
+        if (reindeers[reindeer].flying) {
+            reindeers[reindeer].distance += reindeers[reindeer].speed;
+            reindeers[reindeer].time--;
+            if (reindeers[reindeer].time == 0) {
+                reindeers[reindeer].flying = false;
+            }
+        } else {
+            reindeers[reindeer].time++;
+            if (reindeers[reindeer].time == reindeers[reindeer].rest) {
+                reindeers[reindeer].flying = true;
+                reindeers[reindeer].time = reindeers[reindeer].fly;
+            }
+        }
+        if (reindeers[reindeer].distance > max) {
+            max = reindeers[reindeer].distance;
+        }
+    }
+    for(reindeer in reindeers) {
+        if (reindeers[reindeer].distance == max) {
+            reindeers[reindeer].points++;
+        }
+    }
+}
+    
+var max = 0;
+var name = undefined;
+for(reindeer in reindeers) {
+    if (reindeers[reindeer].points > max) {
+        max = reindeers[reindeer].points;
+        name = reindeer;
+    }
+}
+
+document.getElementById("output").textContent = name + ": " + max;
+
+</script>
+</body>
+</html>
