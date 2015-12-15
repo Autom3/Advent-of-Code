@@ -1,0 +1,122 @@
+<html>
+<head>
+	<title>Day 9 - Part 2</title>
+</head>
+<body>
+<!-- <div id="input">London to Dublin = 464
+London to Belfast = 518
+Dublin to Belfast = 141</div> -->
+<div id="input">Faerun to Tristram = 65
+Faerun to Tambi = 129
+Faerun to Norrath = 144
+Faerun to Snowdin = 71
+Faerun to Straylight = 137
+Faerun to AlphaCentauri = 3
+Faerun to Arbre = 149
+Tristram to Tambi = 63
+Tristram to Norrath = 4
+Tristram to Snowdin = 105
+Tristram to Straylight = 125
+Tristram to AlphaCentauri = 55
+Tristram to Arbre = 14
+Tambi to Norrath = 68
+Tambi to Snowdin = 52
+Tambi to Straylight = 65
+Tambi to AlphaCentauri = 22
+Tambi to Arbre = 143
+Norrath to Snowdin = 8
+Norrath to Straylight = 23
+Norrath to AlphaCentauri = 136
+Norrath to Arbre = 115
+Snowdin to Straylight = 101
+Snowdin to AlphaCentauri = 84
+Snowdin to Arbre = 96
+Straylight to AlphaCentauri = 107
+Straylight to Arbre = 14
+AlphaCentauri to Arbre = 46</div>
+<div id="output"></div>
+<script>
+var input = unescape(document.getElementById("input").textContent);
+var inputLines = input.split("\n");
+
+var elements = [];
+
+var distances = [];
+distances.length = Math.round(Math.sqrt(2*inputLines.length))+1;
+for(var i = 0; i < distances.length; i++) {
+    distances[i] = [];
+    distances[i].length = Math.round(Math.sqrt(2*inputLines.length))+1;
+}
+
+var index = {};
+for(var i = 0; i < inputLines.length; i++) {
+    var one = inputLines[i].substr(0,inputLines[i].indexOf(" to "));
+    var two = inputLines[i].substr(inputLines[i].indexOf(" to ") + 4, inputLines[i].indexOf(" =") - inputLines[i].indexOf(" to ") - 4);
+    var dist = inputLines[i].substr(inputLines[i].indexOf("= ")+2);
+    
+    if (!index.hasOwnProperty(one)) {
+        index[one] = Object.keys(index).length;
+        elements.push({
+            group: "nodes",
+            data: { id: one }
+        });
+    }
+    if (!index.hasOwnProperty(two)) {
+        index[two] = Object.keys(index).length;
+        elements.push({
+            group: "nodes",
+            data: { id: two }
+        });
+    }
+    
+    distances[index[one]][index[two]] = parseInt(dist);
+    distances[index[two]][index[one]] = parseInt(dist);
+    
+    elements.push({
+        group: "edges",
+        data: { weight: parseInt(dist), source: one, target: two}
+    });
+}
+
+for(var i = 0; i < distances.length; i++) {
+    var string = "";
+    for(var j = 0; j < distances.length; j++) {
+        string += "[" + (distances[i][j]===undefined?"xxx":("00" + distances[i][j]).substr(distances[i][j].toString().length-1)) + "]";
+    }
+    console.log(string);
+}
+
+var paths = [];
+function permute(fixed, n) {
+    if (fixed.length === n) {
+        paths.push(fixed.slice());
+        return;
+    }
+    for(var i = 0; i < n; i++) {
+        if (!fixed.includes(i)) {
+            fixed.push(i);
+            permute(fixed, n);
+            fixed.pop();
+        }
+    }
+}
+
+permute([], distances.length);
+
+var max = 0;
+var ind = -1;
+for(var i = 0; i < paths.length; i++) {
+    var sum = 0;
+    for(var j = 1; j < paths[i].length; j++) {
+        sum += distances[paths[i][j-1]][paths[i][j]];
+    }
+    if (sum > max) {
+        max = sum;
+        ind = i;
+    }
+}
+
+document.getElementById("output").textContent = max;
+</script>
+</body>
+</html>
