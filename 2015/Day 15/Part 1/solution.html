@@ -1,0 +1,52 @@
+<html>
+<head>
+	<title>Day 15 - Part 1</title>
+</head>
+<body>
+<div id="input">Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8
+Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3</div>
+<div id="output"></div>
+<script>
+var input = unescape(document.getElementById("input").textContent);
+var inputLines = input.split("\n");
+
+var ingredients = {};
+for(var i = 0; i < inputLines.length; i++) {
+    var name = inputLines[i].substr(0,inputLines[i].indexOf(":"));
+    ingredients[name] = {};
+    var properties = inputLines[i].substr(inputLines[i].indexOf(":")+2).split(", ");
+    for(var j = 0; j < properties.length; j++) {
+        var property = properties[j].split(" ");
+        ingredients[name][property[0]] = parseInt(property[1]);
+    }
+}
+
+function score(mix) {
+    var capacity = 0;
+    var durability = 0;
+    var flavor = 0;
+    var texture = 0;
+    for(var ingredient in mix) {
+        capacity += mix[ingredient]*ingredients[ingredient].capacity;
+        durability += mix[ingredient]*ingredients[ingredient].durability;
+        flavor += mix[ingredient]*ingredients[ingredient].flavor;
+        texture += mix[ingredient]*ingredients[ingredient].texture;
+    }
+    if (capacity <= 0 || durability <= 0 || flavor <= 0 || texture <= 0) {
+        return 0;
+    }
+    return capacity*durability*flavor*texture;
+}
+
+function recursion(spots, separators) {
+    for(var i = 0; i < spots; i++) {
+        
+    }
+}
+
+recursion(100, inputLines.length-1);
+
+document.getElementById("output").textContent = "";
+</script>
+</body>
+</html>

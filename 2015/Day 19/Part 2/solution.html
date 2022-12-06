@@ -1,0 +1,84 @@
+<html>
+<head>
+	<title>Day 19 - Part 2</title>
+</head>
+<body>
+<div id="input1">Al => ThF
+Al => ThRnFAr
+B => BCa
+B => TiB
+B => TiRnFAr
+Ca => CaCa
+Ca => PB
+Ca => PRnFAr
+Ca => SiRnFYFAr
+Ca => SiRnMgAr
+Ca => SiTh
+F => CaF
+F => PMg
+F => SiAl
+H => CRnAlAr
+H => CRnFYFYFAr
+H => CRnFYMgAr
+H => CRnMgYFAr
+H => HCa
+H => NRnFYFAr
+H => NRnMgAr
+H => NTh
+H => OB
+H => ORnFAr
+Mg => BF
+Mg => TiMg
+N => CRnFAr
+N => HSi
+O => CRnFYFAr
+O => CRnMgAr
+O => HP
+O => NRnFAr
+O => OTi
+P => CaP
+P => PTi
+P => SiRnFAr
+Si => CaSi
+Th => ThCa
+Ti => BP
+Ti => TiTi
+e => HF
+e => NAl
+e => OMg</div>
+<div id="input2">CRnCaCaCaSiRnBPTiMgArSiRnSiRnMgArSiRnCaFArTiTiBSiThFYCaFArCaCaSiThCaPBSiThSiThCaCaPTiRnPBSiThRnFArArCaCaSiThCaSiThSiRnMgArCaPTiBPRnFArSiThCaSiRnFArBCaSiRnCaPRnFArPMgYCaFArCaPTiTiTiBPBSiThCaPTiBPBSiRnFArBPBSiRnCaFArBPRnSiRnFArRnSiRnBFArCaFArCaCaCaSiThSiThCaCaPBPTiTiRnFArCaPTiBSiAlArPBCaCaCaCaCaSiRnMgArCaSiThFArThCaSiThCaSiRnCaFYCaSiRnFYFArFArCaSiRnFYFArCaSiRnBPMgArSiThPRnFArCaSiRnFArTiRnSiRnFYFArCaSiRnBFArCaSiRnTiMgArSiThCaSiThCaFArPRnFArSiRnFArTiTiTiTiBCaCaSiRnCaCaFYFArSiThCaPTiBPTiBCaSiThSiRnMgArCaF</div>
+<div id="output"></div>
+<canvas id="canvas" width="400", height="400"></canvas>
+<script>
+    var input1 = unescape(document.getElementById("input1").textContent);
+    var input2 = unescape(document.getElementById("input2").textContent);
+    var inputLines1 = input1.split("\n");
+    
+    var set = [];
+
+    var dictionary = {};
+    for(var i = 0; i < inputLines1.length; i++) {
+        var split = inputLines1[i].split(" => ");
+        if (!dictionary.hasOwnProperty(split[0])) {
+            dictionary[split[0]] = [];
+        }
+        dictionary[split[0]].push(split[1]);
+    }
+    
+    var elements = input2.split(/(?=[A-Z])/);
+    
+    for(var i = 0; i < elements.length; i++) {
+        if (dictionary.hasOwnProperty(elements[i])) {
+            for(var j = 0; j < dictionary[elements[i]].length; j++) {
+                var word = elements.slice(0,i).join("") + dictionary[elements[i]][j] + elements.slice(i+1,elements.length).join("");
+                if (set.indexOf(word) === -1) {
+                    set.push(word);
+                }
+            }
+        }
+    }
+    
+    document.getElementById("output").textContent = set.length;
+</script>
+</body>
+</html>
