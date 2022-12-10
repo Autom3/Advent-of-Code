@@ -1,0 +1,5 @@
+const input = require('fs').readFileSync('input.txt', 'utf-8')
+
+console.log(input.trim().split('\n').map(line => line.split(' ')).reduce((acc, [instruction, ...args]) => [...acc, { count: acc.at(-1).count + (instruction === 'noop' ? 1 : 2), x: acc.at(-1).x + (instruction === 'noop' ? 0 : Number(args[0])) }], [{ count: 0, x: 1 }]).filter((x, i, arr) => x.count <= 220 && Math.ceil((arr[i + 1].count - 20 + 1) / 40) - Math.ceil((x.count - 20 + 1) / 40) > 0).map(x => (Math.ceil((x.count - 20) / 40) * 40 + 20) * x.x).reduce((a, b) => a + b))
+
+console.log((arr => Array(239).fill().map((_, i) => arr.find(({ count }, j) => i >= count && i < arr[j + 1].count).x).map((x, i) => x - 1 <= i % 40 && i % 40 <= x + 1 ? '#' : '.').reduce((acc, c, i) => {acc[Math.floor(i / 40)] += c; return acc}, Array(6).fill('')))(input.trim().split('\n').map(line => line.split(' ')).reduce((acc, [instruction, ...args]) => [...acc, { count: acc.at(-1).count + (instruction === 'noop' ? 1 : 2), x: acc.at(-1).x + (instruction === 'noop' ? 0 : Number(args[0])) }], [{ count: 0, x: 1 }])))
